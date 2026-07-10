@@ -1,11 +1,18 @@
 "use client";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Float, Grid, RoundedBox, Sparkles } from "@react-three/drei";
+import {
+  Float,
+  Grid,
+  PerformanceMonitor,
+  RoundedBox,
+  Sparkles,
+} from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
+import { liteMode } from "@/lib/perf";
 
 const prefersReducedMotion =
   typeof window !== "undefined" &&
@@ -46,7 +53,7 @@ function RgbFan({ position, index }: { position: [number, number, number]; index
       }}
     >
       <mesh ref={ring}>
-        <torusGeometry args={[0.26, 0.045, 16, 48]} />
+        <torusGeometry args={[0.26, 0.045, 10, 36]} />
         <meshStandardMaterial
           ref={mat}
           color="#050508"
@@ -255,7 +262,7 @@ function IntroCamera() {
   return null;
 }
 
-function Scene() {
+function Scene({ degraded }: { degraded: boolean }) {
   return (
     <>
       <IntroCamera />
@@ -292,11 +299,13 @@ function Scene() {
         fadeStrength={1.5}
       />
 
-      <Sparkles count={70} scale={[14, 6, 8]} size={2.2} speed={prefersReducedMotion ? 0 : 0.35} color="#00ffff" opacity={0.5} />
+      <Sparkles count={45} scale={[14, 6, 8]} size={2.2} speed={prefersReducedMotion ? 0 : 0.35} color="#00ffff" opacity={0.5} />
 
-      <EffectComposer>
-        <Bloom intensity={1.1} luminanceThreshold={0.25} mipmapBlur />
-      </EffectComposer>
+      {!degraded && (
+        <EffectComposer multisampling={0}>
+          <Bloom intensity={1.1} luminanceThreshold={0.25} mipmapBlur />
+        </EffectComposer>
+      )}
     </>
   );
 }
@@ -307,13 +316,25 @@ function Scene() {
 ========================= */
 
 export default function HeroScene({ active }: { active: boolean }) {
+  // Lite machines (see lib/perf) start degraded; PerformanceMonitor still
+  // catches weak GPUs the static heuristic misses
+  const [dpr, setDpr] = useState(liteMode ? 1 : 1.5);
+  const [degraded, setDegraded] = useState(liteMode);
+
   return (
     <Canvas
       camera={{ position: [0, 0.4, prefersReducedMotion ? 5.2 : 6.6], fov: 45 }}
-      dpr={[1, 1.5]}
+      dpr={dpr}
+      gl={{ antialias: false, powerPreference: "high-performance", stencil: false }}
       frameloop={prefersReducedMotion ? "demand" : active ? "always" : "never"}
     >
-      <Scene />
+      <PerformanceMonitor
+        onDecline={() => {
+          setDpr(1);
+          setDegraded(true);
+        }}
+      />
+      <Scene degraded={degraded} />
     </Canvas>
   );
 }

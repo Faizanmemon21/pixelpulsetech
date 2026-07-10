@@ -24,10 +24,10 @@ const FOCUS = [
 const SEGMENTS = FOCUS.length - 1;
 
 const PARTS = [
-  { label: "PROCESSOR", title: "AMD Ryzen 7 9800X3D", img: "/specs/cpu.jpg" },
-  { label: "MEMORY", title: "32GB DDR5 6000MHz", img: "/specs/ram.jpg" },
-  { label: "GRAPHICS", title: "NVIDIA GeForce RTX 5080", img: "/specs/gpu.jpg" },
-  { label: "COOLING", title: "360mm ARGB Liquid Cooler", img: "/specs/cooler.jpg" },
+  { label: "PROCESSOR", title: "AMD Ryzen 7 9800X3D", img: "/specs/cpu.webp" },
+  { label: "MEMORY", title: "32GB DDR5 6000MHz", img: "/specs/ram.webp" },
+  { label: "GRAPHICS", title: "NVIDIA GeForce RTX 5080", img: "/specs/gpu.webp" },
+  { label: "COOLING", title: "360mm ARGB Liquid Cooler", img: "/specs/cooler.webp" },
 ];
 
 export default function SpecJourney() {
@@ -59,7 +59,7 @@ export default function SpecJourney() {
       <div className="sticky top-0 h-screen w-full overflow-hidden">
         {/* THE RIG — real photo; scroll moves the "camera" between details */}
         <img
-          src="/specs/pc-showcase.jpg"
+          src="/specs/pc-showcase.webp"
           alt="PixelPulse custom gaming PC with red RGB lighting"
           className="absolute inset-0 h-full w-full object-cover"
           style={{
@@ -67,6 +67,9 @@ export default function SpecJourney() {
             transformOrigin: `${focus.x}% ${focus.y}%`,
             transition:
               "transform 1.4s cubic-bezier(0.22, 1, 0.36, 1), transform-origin 1.4s cubic-bezier(0.22, 1, 0.36, 1)",
+            // keep the image on its own compositor layer — it animates
+            // through the whole 550vh scroll, so avoid repeated repaints
+            willChange: "transform",
           }}
         />
 

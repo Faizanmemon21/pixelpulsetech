@@ -7,12 +7,14 @@ import {
   Environment,
   Html,
   Lightformer,
+  PerformanceMonitor,
   useGLTF,
 } from "@react-three/drei";
 import { EffectComposer, Bloom } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowUpRight, Wrench } from "lucide-react";
+import { liteMode } from "@/lib/perf";
 
 const prefersReducedMotion =
   typeof window !== "undefined" &&
@@ -69,13 +71,24 @@ function ModelLoader() {
 export default function GlbShowcase() {
   const sectionRef = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
+  // Mount the canvas once on first approach, then keep it alive and only
+  // pause the frameloop — repeatedly creating/destroying WebGL contexts
+  // while scrolling causes hitches and leaks GPU memory on weak hardware
+  const [everInView, setEverInView] = useState(false);
+  // Lite machines (see lib/perf) start degraded; PerformanceMonitor still
+  // catches weak GPUs the static heuristic misses
+  const [dpr, setDpr] = useState(liteMode ? 1 : 1.5);
+  const [degraded, setDegraded] = useState(liteMode);
 
   // Only render (and only download the model) once the section approaches
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+        if (entry.isIntersecting) setEverInView(true);
+      },
       { rootMargin: "600px 0px" }
     );
     observer.observe(el);
@@ -90,13 +103,22 @@ export default function GlbShowcase() {
     >
       {/* Close wide-angle camera — the immersive "big rig" look.
           The sway is kept small/slow so it doesn't read as zooming. */}
-      {inView && (
+      {everInView && (
         <Canvas
           camera={{ position: [3.1, 0.7, 3.1], fov: 30 }}
-          dpr={[1, 2]}
+          dpr={dpr}
+          frameloop={inView ? "always" : "never"}
+          gl={{ antialias: false, powerPreference: "high-performance", stencil: false }}
           className="!absolute inset-0"
           onCreated={({ camera }) => camera.lookAt(0, -0.05, 0)}
         >
+          {/* step down render cost whenever the GPU can't hold ~60fps */}
+          <PerformanceMonitor
+            onDecline={() => {
+              setDpr(1);
+              setDegraded(true);
+            }}
+          />
           <color attach="background" args={["#000000"]} />
           <ambientLight intensity={0.35} />
           <directionalLight position={[4, 6, 4]} intensity={1.4} />
@@ -127,18 +149,24 @@ export default function GlbShowcase() {
               />
             </Environment>
 
+            {/* frames={1} bakes the shadow once instead of re-rendering the
+                whole scene from the shadow camera every frame — the ±6° sway
+                is too small to notice in a soft blob shadow */}
             <ContactShadows
               position={[0, -1.25, 0]}
               opacity={0.55}
               scale={8}
               blur={2.4}
               far={2.5}
+              frames={1}
             />
           </Suspense>
 
-          <EffectComposer>
-            <Bloom intensity={0.7} luminanceThreshold={0.8} mipmapBlur />
-          </EffectComposer>
+          {!degraded && (
+            <EffectComposer multisampling={0}>
+              <Bloom intensity={0.7} luminanceThreshold={0.8} mipmapBlur />
+            </EffectComposer>
+          )}
         </Canvas>
       )}
 

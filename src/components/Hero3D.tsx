@@ -12,15 +12,22 @@ const HeroScene = lazy(() => import("./HeroScene"));
 
 export default function Hero3D() {
   const sectionRef = useRef<HTMLElement>(null);
-  const [inView, setInView] = useState(true);
+  const [inView, setInView] = useState(false);
+  // Don't create this second WebGL context (or download the chunk) until
+  // the section approaches — it sits at the bottom of the page, so paying
+  // for it during initial load starves low-end machines
+  const [everInView, setEverInView] = useState(false);
 
   // Pause the WebGL frameloop once the hero is scrolled out of view
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { threshold: 0.05 }
+      ([entry]) => {
+        setInView(entry.isIntersecting);
+        if (entry.isIntersecting) setEverInView(true);
+      },
+      { threshold: 0.05, rootMargin: "400px 0px" }
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -32,9 +39,11 @@ export default function Hero3D() {
       className="relative w-full h-screen overflow-hidden bg-black"
     >
       {/* WEBGL SCENE */}
-      <Suspense fallback={null}>
-        <HeroScene active={inView} />
-      </Suspense>
+      {everInView && (
+        <Suspense fallback={null}>
+          <HeroScene active={inView} />
+        </Suspense>
+      )}
 
       {/* UI OVERLAY — left-aligned beside the rig on desktop */}
       <div className="absolute inset-0 z-10 flex items-center pointer-events-none">
