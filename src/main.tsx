@@ -3,8 +3,9 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import App from "./App";
 import "./index.css";
 
-createRoot(document.getElementById("root")!).render(<App />);
-<>
-  <App />
-  <SpeedInsights />
-</>
+createRoot(document.getElementById("root")!).render(
+  <>
+    <App />
+    <SpeedInsights />
+  </>
+);
