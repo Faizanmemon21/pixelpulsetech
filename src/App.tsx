@@ -4,9 +4,11 @@ import IntroOverlay from "@/components/IntroOverlay";
 import Hero3D from "@/components/Hero3D";
 import BuildVideo from "@/components/BuildVideo";
 import SiteFooter from "@/components/SiteFooter";
+// The hero shell ships in the main bundle so its headline (the LCP element)
+// paints immediately — only the canvas inside it is a lazy chunk
+import GlbShowcase from "@/components/GlbShowcase";
 
 // Heavy sections load as separate chunks
-const GlbShowcase = lazy(() => import("@/components/GlbShowcase"));
 const SpecJourney = lazy(() => import("@/components/SpecJourney"));
 const BuildsPage = lazy(() => import("@/components/BuildsPage"));
 
@@ -34,9 +36,7 @@ export default function App() {
       <Navbar />
       <main>
         {/* HERO — the GLB battlestation, front and center */}
-        <Suspense fallback={null}>
-          <GlbShowcase />
-        </Suspense>
+        <GlbShowcase />
         <BuildVideo />
         <Suspense fallback={null}>
           <SpecJourney />

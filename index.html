@@ -10,14 +10,15 @@
     />
     <link rel="icon" type="image/png" href="/logo.png" />
     <title>PixelPulse Tech · Next-Gen Gaming PCs</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;700&family=Orbitron:wght@700;900&display=swap"
-      rel="stylesheet"
-    />
-    <!-- hero model starts downloading immediately, in parallel with the JS -->
-    <link rel="preload" href="/models/gaming-pc.glb" as="fetch" crossorigin />
+    <!-- self-hosted variable fonts (latin subset, 91KB total), preloaded so
+         text paints in its final font — no swap reflow (was our main CLS
+         source), no render-blocking third-party CSS, no extra connections -->
+    <link rel="preload" href="/fonts/orbitron-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/jetbrains-mono-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- hero model downloads in parallel but must not outrank fonts/JS/CSS —
+         it's 1.4MB and never the LCP element (canvases don't count for LCP) -->
+    <link rel="preload" href="/models/gaming-pc.glb" as="fetch" crossorigin fetchpriority="low" />
   </head>
   <body>
     <div id="root"></div>

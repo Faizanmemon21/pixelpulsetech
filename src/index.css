@@ -1,5 +1,40 @@
 @import "tailwindcss";
 
+/* ---- Self-hosted variable fonts (latin subset) ----
+   Preloaded from index.html, so they're ready at first paint — the late
+   Google-hosted swap was reflowing every headline (CLS 0.41). One variable
+   file per family covers all weights we use. */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url("/fonts/jetbrains-mono-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Orbitron";
+  font-style: normal;
+  font-weight: 400 900;
+  font-display: swap;
+  src: url("/fonts/orbitron-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 /* Don't scan binary asset folders for class names — the 12MB GLB and
    videos were ballooning Tailwind's scanner and OOM-killing the dev server */
 @source not "../public";
@@ -66,10 +101,11 @@ button:focus-visible {
 
 /* ---- Cinematic hero video (premium commercial treatment) ---- */
 
-/* Color grade: lifted contrast, rich saturation, deep blacks —
-   plus a 26s dolly-style push-in that never jars */
+/* The color grade (contrast 1.12 / saturate 1.18 / brightness 0.82) is
+   baked into pc-build.mp4 itself — a CSS filter on a full-screen video
+   forces per-frame GPU filter passes and stutters on integrated graphics.
+   Only the compositor-cheap 26s dolly push-in stays live. */
 .cine-video {
-  filter: contrast(1.12) saturate(1.18) brightness(0.82);
   animation: cineZoom 26s ease-in-out infinite alternate;
   will-change: transform;
 }

@@ -23,11 +23,13 @@ const FOCUS = [
 
 const SEGMENTS = FOCUS.length - 1;
 
+// w/h are the intrinsic image dimensions — set on the <img> so the browser
+// reserves the box before the file arrives (unsized images cause CLS)
 const PARTS = [
-  { label: "PROCESSOR", title: "AMD Ryzen 7 9800X3D", img: "/specs/cpu.webp" },
-  { label: "MEMORY", title: "32GB DDR5 6000MHz", img: "/specs/ram.webp" },
-  { label: "GRAPHICS", title: "NVIDIA GeForce RTX 5080", img: "/specs/gpu.webp" },
-  { label: "COOLING", title: "360mm ARGB Liquid Cooler", img: "/specs/cooler.webp" },
+  { label: "PROCESSOR", title: "AMD Ryzen 7 9800X3D", img: "/specs/cpu.webp", w: 748, h: 544 },
+  { label: "MEMORY", title: "32GB DDR5 6000MHz", img: "/specs/ram.webp", w: 442, h: 478 },
+  { label: "GRAPHICS", title: "NVIDIA GeForce RTX 5080", img: "/specs/gpu.webp", w: 522, h: 478 },
+  { label: "COOLING", title: "360mm ARGB Liquid Cooler", img: "/specs/cooler.webp", w: 565, h: 478 },
 ];
 
 export default function SpecJourney() {
@@ -108,6 +110,8 @@ export default function SpecJourney() {
                 <img
                   src={part.img}
                   alt={`${part.label}: ${part.title}`}
+                  width={part.w}
+                  height={part.h}
                   className="w-full h-auto rounded-2xl border border-red-500/25 shadow-[0_0_50px_-12px_rgba(244,63,94,0.45)]"
                 />
               </motion.div>
