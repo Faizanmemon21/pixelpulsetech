@@ -1,0 +1,201 @@
+"use client";
+
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { shaderMaterial } from "@react-three/drei";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
+import * as THREE from "three";
+import { useRef, useEffect } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import glsl from "babel-plugin-glsl/macro";
+
+gsap.registerPlugin(ScrollTrigger);
+
+/* =========================
+   🌌 AAA SHADER CORE
+========================= */
+
+const AAAShader = shaderMaterial(
+  {
+    uTime: 0,
+    uScroll: 0,
+    uMouse: new THREE.Vector2(),
+  },
+
+  glsl`
+    varying vec2 vUv;
+
+    void main(){
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
+    }
+  `,
+
+  glsl`
+    precision highp float;
+
+    varying vec2 vUv;
+
+    uniform float uTime;
+    uniform float uScroll;
+    uniform vec2 uMouse;
+
+    void main(){
+      vec2 uv = vUv;
+
+      float dist = distance(uv, uMouse);
+
+      float wave = sin(uv.x * 8.0 + uTime + uScroll * 3.0) * 0.6;
+
+      float glow = 0.2 / (dist + 0.1);
+
+      vec3 cyan = vec3(0.0,1.0,1.0);
+      vec3 purple = vec3(0.6,0.2,1.0);
+
+      float mixVal = uv.y + wave + glow;
+
+      vec3 color = mix(cyan, purple, mixVal);
+
+      gl_FragColor = vec4(color, 1.0);
+    }
+  `
+);
+
+function Background() {
+  const ref = useRef<any>();
+  const { mouse } = useThree();
+
+  useFrame((state) => {
+    if (!ref.current) return;
+
+    ref.current.uTime = state.clock.getElapsedTime();
+    ref.current.uMouse = new THREE.Vector2(
+      (mouse.x + 1) / 2,
+      (mouse.y + 1) / 2
+    );
+  });
+
+  return (
+    <mesh scale={3}>
+      <planeGeometry args={[1, 1, 128, 128]} />
+      {/* @ts-ignore */}
+      <aaaShader ref={ref} />
+    </mesh>
+  );
+}
+
+/* =========================
+   📦 FEATURES DATA
+========================= */
+
+const features = [
+  {
+    title: "GPU SHADER ENGINE",
+    desc: "Real-time WebGL rendering with cinematic lighting",
+  },
+  {
+    title: "SCROLL-DRIVEN WORLD",
+    desc: "GSAP timeline controls visual intensity per section",
+  },
+  {
+    title: "MOUSE ENERGY FIELD",
+    desc: "Cursor distorts space like a magnetic field",
+  },
+  {
+    title: "BLOOM LIGHTING SYSTEM",
+    desc: "Neon glow post-processing for AAA visuals",
+  },
+];
+
+/* =========================
+   🚀 AAA FEATURES SECTION
+========================= */
+
+export default function AAAFeatures() {
+  const sections = useRef<HTMLDivElement[]>([]);
+  const shaderRef = useRef<any>({ uScroll: 0 });
+
+  /* 🎬 Scroll-linked shader control */
+  useEffect(() => {
+    gsap.to(shaderRef.current, {
+      uScroll: 1,
+      ease: "none",
+      scrollTrigger: {
+        trigger: document.body,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: true,
+      },
+    });
+
+    sections.current.forEach((el, i) => {
+      gsap.fromTo(
+        el,
+        {
+          opacity: 0,
+          y: 120,
+          scale: 0.96,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          duration: 1,
+          scrollTrigger: {
+            trigger: el,
+            start: "top 80%",
+          },
+        }
+      );
+    });
+  }, []);
+
+  return (
+    <div className="relative w-full bg-black text-white overflow-hidden">
+
+      {/* 🌌 WEBGL BACKGROUND */}
+      <div className="fixed inset-0 -z-10">
+        <Canvas>
+          <Background />
+          <EffectComposer>
+            <Bloom intensity={1.6} luminanceThreshold={0.25} />
+          </EffectComposer>
+        </Canvas>
+      </div>
+
+      {/* HERO */}
+      <div className="h-screen flex flex-col items-center justify-center text-center px-6">
+        <h1 className="text-5xl md:text-7xl font-bold tracking-tight">
+          NEXT GEN <span className="text-cyan-400">FEATURES</span>
+        </h1>
+        <p className="text-gray-400 mt-4 max-w-lg">
+          AAA WebGL experience inspired by Lusion-level cinematic design systems
+        </p>
+      </div>
+
+      {/* FEATURES */}
+      {features.map((f, i) => (
+        <div
+          key={i}
+          ref={(el) => {
+            if (el) sections.current[i] = el;
+          }}
+          className="h-screen flex flex-col items-center justify-center text-center px-6"
+        >
+          <h2 className="text-4xl md:text-6xl font-bold text-cyan-300 tracking-tight">
+            {f.title}
+          </h2>
+
+          <p className="text-gray-400 mt-6 max-w-md text-lg">
+            {f.desc}
+          </p>
+        </div>
+      ))}
+
+      {/* END */}
+      <div className="h-screen flex items-center justify-center text-gray-500">
+        END OF EXPERIENCE
+      </div>
+    </div>
+  );
+}

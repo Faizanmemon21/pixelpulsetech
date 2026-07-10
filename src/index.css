@@ -1,0 +1,220 @@
+@import "tailwindcss";
+
+/* Don't scan binary asset folders for class names — the 12MB GLB and
+   videos were ballooning Tailwind's scanner and OOM-killing the dev server */
+@source not "../public";
+@source not "../videos";
+@source not "../dist";
+
+@theme {
+  /* Semantic tokens (ui-ux-pro-max design system: neon purple + rose action on deep navy) */
+  --color-background: #0f0f23;
+  --color-foreground: #e2e8f0;
+  --color-muted-foreground: #9ca3af;
+
+  /* Light accents carried over from the Hero component's palette */
+  --color-blue-75: #dfdff2;
+  --color-blue-100: #f0f2fa;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #000;
+  color: #e2e8f0;
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Cyberpunk display type for all section headings (Orbitron per design system) */
+h1,
+h2 {
+  font-family: "Orbitron", "Inter", sans-serif;
+}
+
+/* Tailwind v4 preflight sets cursor:default on buttons — restore affordance */
+button:not(:disabled) {
+  cursor: pointer;
+}
+
+a,
+button {
+  touch-action: manipulation;
+}
+
+/* Visible keyboard focus (WCAG focus-states) */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .three-body {
+    animation-duration: 4s;
+  }
+}
+
+/* ---- Cinematic hero video (premium commercial treatment) ---- */
+
+/* Color grade: lifted contrast, rich saturation, deep blacks —
+   plus a 26s dolly-style push-in that never jars */
+.cine-video {
+  filter: contrast(1.12) saturate(1.18) brightness(0.82);
+  animation: cineZoom 26s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes cineZoom {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.1);
+  }
+}
+
+.cine-vignette {
+  background: radial-gradient(
+    ellipse at center,
+    transparent 42%,
+    rgba(0, 0, 0, 0.78) 100%
+  );
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cine-video {
+    animation: none;
+  }
+}
+
+/* ---- Spec journey finale pulse ---- */
+
+.pulse-ring {
+  animation: pulseRing 1.7s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: scale(0.35);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pulse-ring {
+    animation: none;
+    opacity: 0.35;
+  }
+}
+
+/* ---- three-body loader (uiverse.io/G4b413l/tidy-walrus-92) ---- */
+
+.three-body {
+  --uib-size: 35px;
+  --uib-speed: 0.8s;
+  --uib-color: #7c3aed;
+  position: relative;
+  display: inline-block;
+  height: var(--uib-size);
+  width: var(--uib-size);
+  animation: spin78236 calc(var(--uib-speed) * 2.5) infinite linear;
+}
+
+.three-body__dot {
+  position: absolute;
+  height: 100%;
+  width: 30%;
+}
+
+.three-body__dot::after {
+  content: "";
+  position: absolute;
+  height: 0%;
+  width: 100%;
+  padding-bottom: 100%;
+  background-color: var(--uib-color);
+  border-radius: 50%;
+}
+
+.three-body__dot:nth-child(1) {
+  bottom: 5%;
+  left: 0;
+  transform: rotate(60deg);
+  transform-origin: 50% 85%;
+}
+
+.three-body__dot:nth-child(1)::after {
+  bottom: 0;
+  left: 0;
+  animation: wobble1 var(--uib-speed) infinite ease-in-out;
+  animation-delay: calc(var(--uib-speed) * -0.3);
+}
+
+.three-body__dot:nth-child(2) {
+  bottom: 5%;
+  right: 0;
+  transform: rotate(-60deg);
+  transform-origin: 50% 85%;
+}
+
+.three-body__dot:nth-child(2)::after {
+  bottom: 0;
+  left: 0;
+  animation: wobble1 var(--uib-speed) infinite calc(var(--uib-speed) * -0.15) ease-in-out;
+}
+
+.three-body__dot:nth-child(3) {
+  bottom: -5%;
+  left: 0;
+  transform: translateX(116.666%);
+}
+
+.three-body__dot:nth-child(3)::after {
+  top: 0;
+  left: 0;
+  animation: wobble2 var(--uib-speed) infinite ease-in-out;
+}
+
+@keyframes spin78236 {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes wobble1 {
+  0%,
+  100% {
+    transform: translateY(0%) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-66%) scale(0.65);
+    opacity: 0.8;
+  }
+}
+
+@keyframes wobble2 {
+  0%,
+  100% {
+    transform: translateY(0%) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(66%) scale(0.65);
+    opacity: 0.8;
+  }
+}

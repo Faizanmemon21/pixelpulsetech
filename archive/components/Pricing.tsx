@@ -1,0 +1,204 @@
+import { useState } from "react";
+import { Check, Cpu, MemoryStick, HardDrive, Zap } from "lucide-react";
+
+// Resolution-tiered pricing — "sell the outcome, not the checkbox".
+// Tiers are framed by what the buyer actually cares about (target fps at a
+// resolution), not generic Starter/Pro/Enterprise labels.
+
+const TIERS = [
+  {
+    id: "1080p",
+    label: "1080p READY",
+    fps: "144",
+    fpsNote: "fps @ Ultra settings",
+    price: 1299,
+    gpu: "RTX 5060",
+    cpu: "Ryzen 5 9600X",
+    ram: "16GB DDR5",
+    storage: "1TB NVMe SSD",
+    grid: 3,
+    highlight: false,
+  },
+  {
+    id: "1440p",
+    label: "1440p PERFORMANCE",
+    fps: "165",
+    fpsNote: "fps @ High–Ultra",
+    price: 1899,
+    gpu: "RTX 5070 Ti",
+    cpu: "Ryzen 7 9800X3D",
+    ram: "32GB DDR5",
+    storage: "2TB NVMe SSD",
+    grid: 4,
+    highlight: true,
+  },
+  {
+    id: "4k",
+    label: "4K ULTRA",
+    fps: "120",
+    fpsNote: "fps @ Max settings",
+    price: 2999,
+    gpu: "RTX 5090",
+    cpu: "Ryzen 9 9950X3D",
+    ram: "64GB DDR5",
+    storage: "2TB NVMe + liquid cooling",
+    grid: 6,
+    highlight: false,
+  },
+];
+
+// Small resolution-density glyph: rows of filled squares scale with the tier's
+// pixel density. This replaces a generic "01/02/03" badge with something that
+// actually encodes the differentiator between tiers.
+function ResGlyph({ density, active }: { density: number; active: boolean }) {
+  const cells = Array.from({ length: 9 });
+  return (
+    <div className="grid grid-cols-3 gap-[3px] w-8 h-8 shrink-0">
+      {cells.map((_, i) => (
+        <div
+          key={i}
+          className="rounded-[2px]"
+          style={{
+            background:
+              i < density
+                ? active
+                  ? "#00ff88"
+                  : "#7c3aed"
+                : "rgba(255,255,255,0.08)",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function SpecRow({ icon: Icon, children }: { icon: any; children: React.ReactNode }) {
+  return (
+    <li className="flex items-center gap-3 text-sm text-white/70">
+      <Icon size={16} className="text-white/40 shrink-0" />
+      <span>{children}</span>
+    </li>
+  );
+}
+
+export default function PricingSection() {
+  const [billing, setBilling] = useState("full");
+
+  return (
+    <section
+      id="pricing"
+      className="w-full py-24 px-6"
+      style={{
+        background:
+          "repeating-linear-gradient(90deg, rgba(0,255,255,0.025) 0px, rgba(0,255,255,0.025) 1px, transparent 1px, transparent 90px), repeating-linear-gradient(0deg, rgba(0,255,255,0.025) 0px, rgba(0,255,255,0.025) 1px, transparent 1px, transparent 90px), radial-gradient(ellipse at top, #14071f 0%, #0a0a0f 55%, #050506 100%)",
+      }}
+    >
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-16">
+          <p className="text-xs tracking-[0.3em] text-[#00ff88] font-mono mb-3">
+            BUILT FOR YOUR TARGET RESOLUTION
+          </p>
+          <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+            Pick your framerate, not a plan name
+          </h2>
+          <p className="text-white/50 mt-4 max-w-lg mx-auto">
+            Every tier is tuned to hit its target resolution at high refresh
+            rates — not just spec-matched, benchmark-matched.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {TIERS.map((tier) => (
+            <div
+              key={tier.id}
+              className="relative rounded-2xl p-8 flex flex-col transition-transform duration-300 hover:-translate-y-1"
+              style={{
+                background: tier.highlight
+                  ? "linear-gradient(180deg, rgba(124,58,237,0.14) 0%, rgba(10,10,15,0.9) 60%)"
+                  : "rgba(255,255,255,0.03)",
+                border: tier.highlight
+                  ? "1px solid rgba(124,58,237,0.55)"
+                  : "1px solid rgba(255,255,255,0.08)",
+                boxShadow: tier.highlight
+                  ? "0 0 60px -12px rgba(124,58,237,0.45)"
+                  : "none",
+              }}
+            >
+              {tier.highlight && (
+                <span className="absolute -top-3 left-8 text-[11px] font-semibold tracking-wide bg-[#7c3aed] text-white px-3 py-1 rounded-full">
+                  MOST BUILT
+                </span>
+              )}
+
+              <div className="flex items-center gap-3 mb-6">
+                <ResGlyph density={tier.grid} active={tier.highlight} />
+                <span className="text-sm font-semibold tracking-widest text-white/80">
+                  {tier.label}
+                </span>
+              </div>
+
+              <div className="mb-1 flex items-baseline gap-2">
+                <span className="text-5xl font-bold text-white">
+                  {tier.fps}
+                </span>
+                <span className="text-white/60 text-sm">{tier.fpsNote}</span>
+              </div>
+
+              <div className="flex items-baseline gap-1 mb-8">
+                <span className="text-2xl font-semibold text-white font-mono">
+                  ${tier.price.toLocaleString()}
+                </span>
+                <span className="text-white/60 text-sm">
+                  {billing === "full" ? "one-time" : "/mo · 24mo"}
+                </span>
+              </div>
+
+              <ul className="space-y-3 mb-8 flex-1">
+                <SpecRow icon={Zap}>{tier.gpu}</SpecRow>
+                <SpecRow icon={Cpu}>{tier.cpu}</SpecRow>
+                <SpecRow icon={MemoryStick}>{tier.ram}</SpecRow>
+                <SpecRow icon={HardDrive}>{tier.storage}</SpecRow>
+              </ul>
+
+              <button
+                className="w-full py-3 rounded-lg font-semibold text-sm transition-colors cursor-pointer"
+                style={{
+                  background: tier.highlight ? "#f43f5e" : "rgba(255,255,255,0.08)",
+                  color: "#fff",
+                }}
+              >
+                Build this rig
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex items-center justify-center gap-2 mt-10">
+          <button
+            onClick={() => setBilling("full")}
+            aria-pressed={billing === "full"}
+            className="text-xs px-4 py-2 rounded-full transition-colors"
+            style={{
+              background: billing === "full" ? "rgba(255,255,255,0.1)" : "transparent",
+              color: billing === "full" ? "#fff" : "rgba(255,255,255,0.4)",
+            }}
+          >
+            <Check size={12} className="inline mr-1 -mt-0.5" />
+            Pay in full
+          </button>
+          <button
+            onClick={() => setBilling("finance")}
+            aria-pressed={billing === "finance"}
+            className="text-xs px-4 py-2 rounded-full transition-colors"
+            style={{
+              background: billing === "finance" ? "rgba(255,255,255,0.1)" : "transparent",
+              color: billing === "finance" ? "#fff" : "rgba(255,255,255,0.4)",
+            }}
+          >
+            Finance monthly
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}

@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Admin/AppData/Local/Temp/claude/c--Users-Admin-Desktop-Claude-3d-web-part-2/eb72686a-2604-4980-a5d6-0e1ca2a9ad2a/scratchpad/ui-ux-pro-max-skill/cli/assets/templates/**)",
+      "Read(//c/Users/Admin/AppData/Local/Temp/claude/c--Users-Admin-Desktop-Claude-3d-web-part-2/eb72686a-2604-4980-a5d6-0e1ca2a9ad2a/scratchpad/ui-ux-pro-max-skill/src/ui-ux-pro-max/**)",
+      "Bash(npx -y ui-ux-pro-max-cli init --ai claude)"
+    ]
+  }
+}

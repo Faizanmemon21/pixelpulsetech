@@ -1,0 +1,144 @@
+"use client";
+
+import { Canvas, useFrame, useThree, extend } from "@react-three/fiber";
+import { shaderMaterial } from "@react-three/drei";
+import { EffectComposer, Bloom } from "@react-three/postprocessing";
+import * as THREE from "three";
+import { useRef } from "react";
+import glsl from "babel-plugin-glsl/macro";
+
+/* =========================
+   🎮 SHADER MATERIAL
+========================= */
+
+const UltraMaterial = shaderMaterial(
+  {
+    uTime: 0,
+    uMouse: new THREE.Vector2(0, 0),
+    uColorA: new THREE.Color("#00ffff"),
+    uColorB: new THREE.Color("#7c3aed"),
+  },
+
+  // Vertex Shader
+  glsl`
+    varying vec2 vUv;
+    varying float vWave;
+
+    uniform float uTime;
+
+    void main() {
+      vUv = uv;
+
+      vec3 pos = position;
+
+      float wave = sin(pos.x * 4.0 + uTime) * 0.15;
+      pos.z += wave;
+
+      vWave = wave;
+
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+    }
+  `,
+
+  // Fragment Shader
+  glsl`
+    precision highp float;
+
+    varying vec2 vUv;
+    varying float vWave;
+
+    uniform float uTime;
+    uniform vec2 uMouse;
+    uniform vec3 uColorA;
+    uniform vec3 uColorB;
+
+    void main() {
+      vec2 uv = vUv;
+
+      float dist = distance(uv, uMouse);
+      float ripple = sin(dist * 15.0 - uTime * 3.0) * 0.1;
+
+      float pattern = sin(uv.x * 10.0 + uTime) * sin(uv.y * 10.0 + uTime);
+
+      float mixVal = uv.y + pattern + ripple + vWave;
+
+      vec3 color = mix(uColorA, uColorB, mixVal);
+
+      float glow = 0.25 / dist;
+
+      color += glow * 0.3;
+
+      gl_FragColor = vec4(color, 1.0);
+    }
+  `
+);
+
+extend({ UltraMaterial });
+
+/* =========================
+   🎮 BACKGROUND MESH
+========================= */
+
+function Background() {
+  const ref = useRef<any>();
+  const { mouse, size } = useThree();
+
+  useFrame((state) => {
+    if (!ref.current) return;
+
+    ref.current.uTime = state.clock.getElapsedTime();
+
+    ref.current.uMouse = new THREE.Vector2(
+      (mouse.x + 1) / 2,
+      (mouse.y + 1) / 2
+    );
+  });
+
+  return (
+    <mesh scale={2.8}>
+      <planeGeometry args={[1, 1, 128, 128]} />
+      {/* @ts-ignore */}
+      <ultraMaterial ref={ref} />
+    </mesh>
+  );
+}
+
+/* =========================
+   🚀 MAIN HERO
+========================= */
+
+export default function UltraGamingHero() {
+  return (
+    <div className="relative w-full h-screen overflow-hidden bg-black">
+      {/* 🌌 WEBGL BACKGROUND */}
+      <Canvas camera={{ position: [0, 0, 2] }}>
+        <Background />
+
+        <EffectComposer>
+          <Bloom intensity={1.5} luminanceThreshold={0.2} />
+        </EffectComposer>
+      </Canvas>
+
+      {/* 🎮 UI OVERLAY */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-10">
+        <h1 className="text-white text-5xl md:text-7xl font-bold tracking-tight">
+          NEXT GEN <span className="text-cyan-400">GAMING PCS</span>
+        </h1>
+
+        <p className="text-gray-300 mt-4 max-w-xl">
+          High-performance custom rigs powered by next-gen GPU architecture.
+        </p>
+
+        <div className="flex gap-4 mt-8">
+          <button className="px-6 py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-semibold rounded-xl transition">
+            Build Now
+          </button>
+
+          <button className="px-6 py-3 border border-white/30 text-white rounded-xl hover:bg-white/10 transition">
+            Explore
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}

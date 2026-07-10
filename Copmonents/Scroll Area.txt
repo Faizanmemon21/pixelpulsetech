@@ -1,0 +1,142 @@
+import { useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
+
+const slides = [
+  {
+    title: "Create",
+    image: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d",
+  },
+  {
+    title: "Design",
+    image: "https://images.unsplash.com/photo-1526481280695-3c687fd5432c",
+  },
+  {
+    title: "Animate",
+    image: "https://images.unsplash.com/photo-1559028012-481c04fa702d",
+  },
+  {
+    title: "Launch",
+    image: "https://images.unsplash.com/photo-1553877522-43269d4ea984",
+  },
+];
+
+export default function PremiumHorizontalScroll() {
+  const sectionRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const progressRef = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const totalScroll = (slides.length - 1) * window.innerWidth;
+
+      // Main horizontal scroll
+      gsap.to(trackRef.current, {
+        x: -totalScroll,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: () => `+=${totalScroll}`,
+          scrub: 1,
+          pin: true,
+          anticipatePin: 1,
+        },
+      });
+
+      // Progress bar animation
+      gsap.to(progressRef.current, {
+        scaleX: 1,
+        transformOrigin: "left center",
+        ease: "none",
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: () => `+=${totalScroll}`,
+          scrub: true,
+        },
+      });
+
+      // Parallax + text reveal per slide
+      const panels = gsap.utils.toArray<HTMLElement>(".panel");
+
+      panels.forEach((panel) => {
+        const img = panel.querySelector("img");
+        const text = panel.querySelector("h1");
+
+        gsap.fromTo(
+          img,
+          { scale: 1.2 },
+          {
+            scale: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: panel,
+              containerAnimation: ScrollTrigger.getAll()[0],
+              start: "left right",
+              end: "right left",
+              scrub: true,
+            },
+          }
+        );
+
+        gsap.fromTo(
+          text,
+          { y: 80, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: panel,
+              containerAnimation: ScrollTrigger.getAll()[0],
+              start: "left center",
+              end: "center center",
+              scrub: true,
+            },
+          }
+        );
+      });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section ref={sectionRef} className="relative h-screen overflow-hidden bg-black">
+      {/* Progress Bar */}
+      <div className="absolute top-0 left-0 w-full h-[3px] bg-white/10 z-50">
+        <div
+          ref={progressRef}
+          className="h-full w-full bg-white scale-x-0 origin-left"
+        />
+      </div>
+
+      {/* Track */}
+      <div ref={trackRef} className="flex h-screen w-[400vw]">
+        {slides.map((slide, i) => (
+          <div
+            key={i}
+            className="panel relative w-screen h-screen flex items-center justify-center overflow-hidden"
+          >
+            {/* Image */}
+            <img
+              src={slide.image}
+              className="absolute w-full h-full object-cover opacity-60"
+            />
+
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-black/40" />
+
+            {/* Text */}
+            <h1 className="relative text-white text-6xl md:text-8xl font-bold tracking-tight">
+              {slide.title}
+            </h1>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
