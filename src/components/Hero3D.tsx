@@ -55,7 +55,7 @@ export default function Hero3D() {
                 alt="PixelPulse Tech"
                 className="h-12 w-12 rounded-lg object-cover"
               />
-              <p className="text-xs tracking-[0.35em] text-cyan-300 font-mono">
+              <p className="text-xs tracking-[0.35em] text-red-400 font-mono">
                 CUSTOM RIGS
               </p>
             </div>
@@ -63,7 +63,7 @@ export default function Hero3D() {
             <h1 className="text-white text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05]">
               NEXT GEN
               <br />
-              <span className="text-cyan-400">GAMING PCS</span>
+              <span className="text-red-500">GAMING PCS</span>
             </h1>
 
             <p className="text-gray-300 mt-6 max-w-md mx-auto md:mx-0">
@@ -76,7 +76,7 @@ export default function Hero3D() {
               {["RTX 50 SERIES", "240 FPS", "DDR5-8000", "GEN5 NVME"].map((chip) => (
                 <span
                   key={chip}
-                  className="px-3 py-1.5 rounded border border-cyan-400/30 text-cyan-300 bg-cyan-950/30"
+                  className="px-3 py-1.5 rounded border border-red-500/30 text-red-300 bg-red-950/30"
                 >
                   {chip}
                 </span>
@@ -86,14 +86,14 @@ export default function Hero3D() {
             <div className="flex gap-4 mt-8 justify-center md:justify-start pointer-events-auto">
               <a
                 href="#/builds"
-                className="px-6 py-3 bg-red-600 hover:bg-red-500 text-white font-semibold rounded-xl transition"
+                className="glow-btn px-6 py-3 bg-red-600 hover:bg-red-500 text-white font-semibold rounded-xl"
               >
                 Build Now
               </a>
 
               <a
                 href="#inside"
-                className="px-6 py-3 border border-white/30 text-white rounded-xl hover:bg-white/10 transition"
+                className="glow-btn px-6 py-3 border border-white/30 text-white rounded-xl hover:bg-white/10"
               >
                 Explore
               </a>

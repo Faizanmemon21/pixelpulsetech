@@ -92,12 +92,66 @@ button {
   touch-action: manipulation;
 }
 
-/* Visible keyboard focus (WCAG focus-states) */
+/* Visible keyboard focus (WCAG focus-states) — brand red with a soft glow */
 a:focus-visible,
-button:focus-visible {
-  outline: 2px solid #22d3ee;
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid #ff1a2f;
   outline-offset: 2px;
   border-radius: 4px;
+  box-shadow: 0 0 14px rgba(255, 20, 40, 0.5);
+}
+
+/* ---- Red glow interactions (desktop hover only) ----
+   .glow-icon → icon chips/circles: lift, scale, neon ring
+   .glow-btn  → CTAs/buttons: lift + border glow, no size change
+   .glow-link → text+icon rows / nav links: brighten + text glow */
+.glow-icon,
+.glow-btn,
+.glow-link {
+  transition:
+    transform 0.28s ease,
+    box-shadow 0.28s ease,
+    background-color 0.28s ease,
+    border-color 0.28s ease,
+    color 0.28s ease,
+    text-shadow 0.28s ease,
+    filter 0.28s ease;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .glow-icon:hover {
+    transform: translateY(-4px) scale(1.08);
+    box-shadow:
+      0 0 16px rgba(255, 20, 40, 0.65),
+      0 0 38px rgba(255, 20, 40, 0.35);
+    filter: brightness(1.12);
+  }
+  .glow-btn:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 1px rgba(255, 20, 40, 0.55),
+      0 0 20px rgba(255, 20, 40, 0.45),
+      0 0 46px rgba(255, 20, 40, 0.22);
+    filter: brightness(1.08);
+  }
+  .glow-link:hover {
+    color: #fff;
+    text-shadow: 0 0 12px rgba(255, 20, 40, 0.8);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow-icon,
+  .glow-btn,
+  .glow-link {
+    transition: none;
+  }
+  .glow-icon:hover,
+  .glow-btn:hover {
+    transform: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

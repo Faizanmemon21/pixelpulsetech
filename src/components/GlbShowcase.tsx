@@ -69,7 +69,7 @@ export default function GlbShowcase() {
             <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center md:justify-start pointer-events-auto">
               <a
                 href="#/builds"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-red-600 hover:bg-red-500 text-white font-semibold rounded-xl transition"
+                className="glow-btn inline-flex items-center justify-center gap-2 px-7 py-3.5 bg-red-600 hover:bg-red-500 text-white font-semibold rounded-xl"
               >
                 <Wrench className="size-4" />
                 Start Your Build
@@ -78,7 +78,7 @@ export default function GlbShowcase() {
 
               <a
                 href="mailto:builds@pixelpulsetech.pk"
-                className="inline-flex items-center justify-center px-7 py-3.5 border border-white/25 text-white rounded-xl hover:bg-white/10 transition"
+                className="glow-btn inline-flex items-center justify-center px-7 py-3.5 border border-white/25 text-white rounded-xl hover:bg-white/10"
               >
                 Talk to a Builder
               </a>

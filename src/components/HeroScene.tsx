@@ -30,7 +30,13 @@ function RgbFan({ position, index }: { position: [number, number, number]; index
   useFrame((state) => {
     const t = state.clock.getElapsedTime();
     ring.current.rotation.z = t * (1.2 + index * 0.3) * (hovered ? 2.5 : 1);
-    mat.current.emissive.setHSL((t * 0.06 + index * 0.18) % 1, 1, 0.55);
+    // brand palette: hue breathes inside the red band (crimson ↔ rose ↔ ember)
+    // instead of cycling the whole RGB wheel
+    mat.current.emissive.setHSL(
+      (0.96 + Math.sin(t * 0.8 + index * 2.1) * 0.045 + 1) % 1,
+      1,
+      0.55
+    );
     // hovered fan flares up, spins faster, and eases back down
     mat.current.emissiveIntensity = THREE.MathUtils.lerp(
       mat.current.emissiveIntensity,
@@ -57,7 +63,7 @@ function RgbFan({ position, index }: { position: [number, number, number]; index
         <meshStandardMaterial
           ref={mat}
           color="#050508"
-          emissive="#00ffff"
+          emissive="#ff2244"
           emissiveIntensity={2.6}
           toneMapped={false}
         />
@@ -145,10 +151,10 @@ function Rig() {
       >
         <meshStandardMaterial
           ref={caseMat}
-          color="#1a1a2a"
+          color="#221216"
           metalness={0.9}
           roughness={0.25}
-          emissive="#4dd0ff"
+          emissive="#ff3344"
           emissiveIntensity={0}
         />
       </RoundedBox>
@@ -179,7 +185,7 @@ function Rig() {
         <planeGeometry args={[0.96, 2.26]} />
         <meshPhysicalMaterial
           ref={glassMat}
-          color="#88ccff"
+          color="#ff9daa"
           transparent
           opacity={0.22}
           roughness={0.04}
@@ -194,7 +200,7 @@ function Rig() {
       {[1.145, -1.145].map((y) => (
         <mesh key={y} position={[0.59, y, 0]} rotation={[0, Math.PI / 2, 0]}>
           <boxGeometry args={[1.0, 0.03, 0.02]} />
-          <meshStandardMaterial color="#1a1a2a" metalness={0.9} roughness={0.3} />
+          <meshStandardMaterial color="#221216" metalness={0.9} roughness={0.3} />
         </mesh>
       ))}
 
@@ -208,7 +214,7 @@ function Rig() {
         <meshStandardMaterial
           ref={gpuMat}
           color="#0a0a12"
-          emissive="#7c3aed"
+          emissive="#ff1f3d"
           emissiveIntensity={1.8}
           toneMapped={false}
         />
@@ -220,7 +226,7 @@ function Rig() {
           <boxGeometry args={[0.04, 0.5, 0.02]} />
           <meshStandardMaterial
             color="#000"
-            emissive="#00ffff"
+            emissive="#ff4d5e"
             emissiveIntensity={1.6}
             toneMapped={false}
           />
@@ -267,12 +273,15 @@ function Scene({ degraded }: { degraded: boolean }) {
     <>
       <IntroCamera />
       <fog attach="fog" args={["#000000", 6, 16]} />
+      {/* red brand lighting: crimson key, deep-red fill, warm ember bounce —
+          and a cool near-white rim so shapes still separate from the black
+          sky instead of drowning in a single hue */}
       <ambientLight intensity={0.25} />
-      <pointLight position={[3, 3, 4]} intensity={30} color="#00ffff" />
-      <pointLight position={[-4, 2, -2]} intensity={25} color="#7c3aed" />
-      <pointLight position={[0, -1, 3]} intensity={8} color="#f43f5e" />
+      <pointLight position={[3, 3, 4]} intensity={30} color="#ff2233" />
+      <pointLight position={[-4, 2, -2]} intensity={25} color="#8c1626" />
+      <pointLight position={[0, -1, 3]} intensity={8} color="#ff6a3d" />
       {/* rim light so the tower silhouette separates from the black sky */}
-      <pointLight position={[4, 2, -3]} intensity={40} color="#4dd0ff" />
+      <pointLight position={[4, 2, -3]} intensity={40} color="#ffe9e4" />
 
       {/* the rig, floating gently, offset right of the headline on desktop */}
       <group position={[1.9, 0.15, 0]}>
@@ -291,15 +300,15 @@ function Scene({ degraded }: { degraded: boolean }) {
         infiniteGrid
         cellSize={0.6}
         cellThickness={0.6}
-        cellColor="#0e2233"
+        cellColor="#2b0d12"
         sectionSize={3}
         sectionThickness={1.2}
-        sectionColor="#00b3b3"
+        sectionColor="#c11f2e"
         fadeDistance={22}
         fadeStrength={1.5}
       />
 
-      <Sparkles count={45} scale={[14, 6, 8]} size={2.2} speed={prefersReducedMotion ? 0 : 0.35} color="#00ffff" opacity={0.5} />
+      <Sparkles count={45} scale={[14, 6, 8]} size={2.2} speed={prefersReducedMotion ? 0 : 0.35} color="#ff4d5e" opacity={0.5} />
 
       {!degraded && (
         <EffectComposer multisampling={0}>

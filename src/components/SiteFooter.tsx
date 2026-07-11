@@ -21,6 +21,15 @@ export default function SiteFooter() {
         }}
       />
 
+      {/* brand heartbeat — pulse line glowing behind the columns */}
+      <img
+        src="/pulse-line.webp"
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        className="pointer-events-none select-none absolute left-1/2 top-1/2 w-full max-w-5xl -translate-x-1/2 -translate-y-1/2 opacity-30"
+      />
+
       <div className="relative max-w-6xl mx-auto px-6 py-16 grid gap-12 md:grid-cols-2 lg:grid-cols-4">
         {/* brand + slogan */}
         <div>
@@ -44,21 +53,21 @@ export default function SiteFooter() {
             <a
               href="#"
               aria-label="Facebook"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-500 transition"
+              className="glow-icon flex h-9 w-9 items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-500"
             >
               <Facebook className="size-4" />
             </a>
             <a
               href="#"
               aria-label="Instagram"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-500 transition"
+              className="glow-icon flex h-9 w-9 items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-500"
             >
               <Instagram className="size-4" />
             </a>
             <a
               href="#"
               aria-label="YouTube"
-              className="flex h-9 w-9 items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-500 transition"
+              className="glow-icon flex h-9 w-9 items-center justify-center rounded-full bg-red-600 text-white hover:bg-red-500"
             >
               <Youtube className="size-4" />
             </a>
@@ -75,7 +84,7 @@ export default function SiteFooter() {
               <li key={link.name}>
                 <a
                   href={link.href}
-                  className="text-sm text-white/70 hover:text-white transition"
+                  className="glow-link text-sm text-white/70"
                 >
                   {link.name}
                 </a>
@@ -91,7 +100,7 @@ export default function SiteFooter() {
             <li>
               <a
                 href="tel:+923311392238"
-                className="flex items-center gap-2 hover:text-white transition"
+                className="glow-link flex items-center gap-2"
               >
                 <Phone className="size-4 text-red-500" /> +92 331-1392238
               </a>
@@ -99,7 +108,7 @@ export default function SiteFooter() {
             <li>
               <a
                 href="mailto:info@pixelpulsetech.pk"
-                className="flex items-center gap-2 hover:text-white transition"
+                className="glow-link flex items-center gap-2"
               >
                 <Mail className="size-4 text-red-500" /> info@pixelpulsetech.pk
               </a>
@@ -121,7 +130,7 @@ export default function SiteFooter() {
           </p>
           <a
             href="#"
-            className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-white/30 text-sm text-white hover:bg-red-600 hover:border-red-600 transition"
+            className="glow-btn mt-6 inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-white/30 text-sm text-white hover:bg-red-600 hover:border-red-600"
           >
             Join our Facebook Group <ArrowUpRight className="size-4" />
           </a>

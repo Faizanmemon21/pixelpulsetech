@@ -46,9 +46,14 @@ export function Navbar() {
               >
                 PIXEL<span className="text-red-600">PULSE</span>TECH
               </span>
-              <span className="block mt-1 font-mono text-[9px] tracking-[0.5em] text-white/45">
-                PIXELPULSETECH.PK
-              </span>
+              {/* brand heartbeat under the wordmark — spans the full wordmark
+                  width; object-cover center-crops the wide image into a strip */}
+              <img
+                src="/pulse-line.webp"
+                alt=""
+                aria-hidden="true"
+                className="pointer-events-none select-none block h-5 md:h-6 w-full object-cover -mt-1"
+              />
             </span>
           </a>
 
@@ -73,7 +78,7 @@ export function Navbar() {
             <button
               type="submit"
               aria-label="Search"
-              className="h-full w-12 flex items-center justify-center bg-red-600 hover:bg-red-500 text-white transition"
+              className="glow-btn h-full w-12 flex items-center justify-center bg-red-600 hover:bg-red-500 text-white"
             >
               <Search className="size-4" />
             </button>
@@ -83,14 +88,14 @@ export function Navbar() {
           <div className="order-2 md:order-3 ml-auto flex items-center gap-4">
             <a
               href="mailto:info@pixelpulsetech.pk?subject=Account"
-              className="px-4 py-2 border border-white/40 rounded text-xs md:text-sm font-semibold text-white hover:bg-white/10 transition whitespace-nowrap"
+              className="glow-btn px-4 py-2 border border-white/40 rounded text-xs md:text-sm font-semibold text-white hover:bg-white/10 whitespace-nowrap"
             >
               LOGIN / REGISTER
             </a>
             <a
               href="#/builds"
               aria-label="Cart"
-              className="relative flex h-10 w-10 items-center justify-center rounded bg-white text-black hover:bg-white/85 transition"
+              className="glow-icon relative flex h-10 w-10 items-center justify-center rounded bg-white text-black hover:bg-white/85"
             >
               <ShoppingCart className="size-5" />
               <span className="absolute -top-1.5 -right-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-red-600 text-[10px] font-bold text-white">
@@ -111,7 +116,7 @@ export function Navbar() {
             <a
               key={item.name}
               href={item.href}
-              className="text-[12px] sm:text-[13px] font-semibold tracking-wide text-white/75 hover:text-red-400 transition-colors whitespace-nowrap"
+              className="glow-link text-[12px] sm:text-[13px] font-semibold tracking-wide text-white/75 whitespace-nowrap"
             >
               {item.name}
             </a>
