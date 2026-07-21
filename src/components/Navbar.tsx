@@ -4,7 +4,7 @@ import * as React from "react";
 import { Search, ShoppingCart } from "lucide-react";
 
 const navLinks = [
-  { name: "CUSTOM BUILD", href: "#/builds" },
+  { name: "CUSTOM BUILD", href: "#/pc-builder" },
   { name: "SHOP", href: "#/builds" },
   { name: "NEW ARRIVAL", href: "#/builds" },
   { name: "CATEGORY", href: "#/builds" },

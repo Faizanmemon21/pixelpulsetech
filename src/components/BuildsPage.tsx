@@ -218,6 +218,12 @@ export default function BuildsPage() {
             <p className="text-white/60 mt-4 max-w-lg mx-auto">
               Every part we sell is the part we'd put in our own rigs.
             </p>
+            <a
+              href="#/pc-builder"
+              className="glow-btn mt-6 inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold bg-red-600 hover:bg-red-500 text-white"
+            >
+              Open the Custom PC Builder <ArrowUpRight className="size-4" />
+            </a>
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

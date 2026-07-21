@@ -103,6 +103,28 @@ select:focus-visible {
   box-shadow: 0 0 14px rgba(255, 20, 40, 0.5);
 }
 
+/* Admin form inputs */
+.ppt-input {
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  padding: 0.6rem 0.75rem;
+  font-size: 0.9rem;
+  color: #fff;
+}
+.ppt-input::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+}
+.ppt-input:focus {
+  outline: none;
+  border-color: #ff1a2f;
+  box-shadow: 0 0 0 3px rgba(255, 20, 40, 0.18);
+}
+.ppt-input option {
+  background: #0c0707;
+}
+
 /* ---- Red glow interactions (desktop hover only) ----
    .glow-icon → icon chips/circles: lift, scale, neon ring
    .glow-btn  → CTAs/buttons: lift + border glow, no size change
@@ -152,6 +174,90 @@ select:focus-visible {
   .glow-btn:hover {
     transform: none;
   }
+}
+
+/* Hide scrollbar on the PC Builder's horizontal category tab strip —
+   scrolling still works, just without a visible track on desktop. */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---- Chat widget ---- */
+
+@keyframes chatIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Minimal Markdown styling for assistant chat bubbles — no Tailwind
+   typography plugin needed for this one small surface. */
+.chat-markdown p {
+  margin: 0 0 0.5em;
+}
+.chat-markdown p:last-child {
+  margin-bottom: 0;
+}
+.chat-markdown ul,
+.chat-markdown ol {
+  margin: 0.4em 0 0.6em;
+  padding-left: 1.25em;
+}
+.chat-markdown li {
+  margin: 0.15em 0;
+}
+.chat-markdown ul {
+  list-style: disc;
+}
+.chat-markdown ol {
+  list-style: decimal;
+}
+.chat-markdown a {
+  color: #ff6b7a;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.chat-markdown strong {
+  font-weight: 700;
+  color: #fff;
+}
+.chat-markdown code {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  padding: 0.1em 0.4em;
+  font-size: 0.85em;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+}
+.chat-markdown pre {
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 0.6em 0.8em;
+  overflow-x: auto;
+  margin: 0.5em 0;
+}
+.chat-markdown pre code {
+  background: none;
+  padding: 0;
+}
+.chat-markdown table {
+  border-collapse: collapse;
+  margin: 0.5em 0;
+  font-size: 0.9em;
+}
+.chat-markdown th,
+.chat-markdown td {
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 0.3em 0.6em;
 }
 
 @media (prefers-reduced-motion: reduce) {
