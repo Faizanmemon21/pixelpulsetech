@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
-import { isAuthed, isConfigured } from "../_lib/adminAuth";
+import { isAuthed, isConfigured } from "../_lib/adminAuth.js";
 
 /* Mints a short-lived upload token so the admin's browser can upload the
    image directly to Vercel Blob (bypassing the serverless body-size limit).

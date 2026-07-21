@@ -5,7 +5,7 @@ import {
   isConfigured,
   passwordMatches,
   setSessionCookie,
-} from "../_lib/adminAuth";
+} from "../_lib/adminAuth.js";
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
   // GET → report whether the caller is already signed in (and configured)

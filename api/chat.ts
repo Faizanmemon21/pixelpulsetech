@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import OpenAI from "openai";
-import { KNOWLEDGE_BASE } from "./_lib/knowledge";
+import { KNOWLEDGE_BASE } from "./_lib/knowledge.js";
 import {
   currentUtcDate,
   decodeGuestUsage,
@@ -8,7 +8,7 @@ import {
   GUEST_USAGE_COOKIE,
   GUEST_USAGE_COOKIE_MAX_AGE_SECONDS,
   readCookie,
-} from "./_lib/guestUsage";
+} from "./_lib/guestUsage.js";
 
 export const config = { maxDuration: 60 };
 

@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { rejectIfUnauthed } from "../_lib/adminAuth";
-import { sanitizeCatalog, writeCatalog } from "../_lib/catalogStore";
+import { rejectIfUnauthed } from "../_lib/adminAuth.js";
+import { sanitizeCatalog, writeCatalog } from "../_lib/catalogStore.js";
 
 export const config = { maxDuration: 30 };
 

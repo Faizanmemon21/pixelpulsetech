@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { readCatalog } from "./_lib/catalogStore";
+import { readCatalog } from "./_lib/catalogStore.js";
 
 /* Public endpoint — the PC builder fetches the live product catalog here.
    Returns { catalog: null } when nothing has been saved yet, and the
